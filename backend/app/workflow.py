@@ -52,7 +52,13 @@ def propose_patch(state: AgentState) -> dict[str, Any]:
         description += "\n\nREPAIR MODE: Fix the reported test failure. Do not remove or weaken tests to make them pass. Test output:\n" + state["repair_feedback"][:8000]
     proposal = propose_files(description, state["plan"], state["file_names"], state["context"])
     if not proposal["files"]:
-        raise ValueError("The model did not propose file edits: " + proposal["summary"])
+        summary = proposal.get("summary", "The model did not explain its result.")
+        raise ValueError(
+            "DevAgent could not propose a code change after one corrective retry. "
+            "The requested behavior may already exist, or the model may not have understood the task. "
+            f"Model summary: {summary[:500]} "
+            "Check the current files and try a more specific task if a change is still needed."
+        )
     diffs = []
     seen = set()
     for item in proposal["files"]:
@@ -70,7 +76,11 @@ def propose_patch(state: AgentState) -> dict[str, Any]:
         diffs.append(make_unified_diff(path, old, item["content"]))
     diff_text = "\n".join(diff for diff in diffs if diff)
     if not diff_text.strip():
-        raise ValueError("The model's proposed content produced no changes.")
+        raise ValueError(
+            "DevAgent generated no effective changes after one corrective retry. "
+            "The requested behavior may already be implemented. Inspect the current files, "
+            "or specify the exact missing behavior and expected tests."
+        )
     if len(diff_text.encode("utf-8")) > get_settings().devagent_max_patch_bytes:
         raise PatchError("Proposed changes exceed the configured patch size limit.")
     return {"proposal": proposal, "diff_text": diff_text}
