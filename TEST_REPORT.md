@@ -98,4 +98,4 @@ The unchanged-proposal fix from the former repository's pull request #1 was tran
 - `backend/app/workflow.py`: reports clear diagnostics when the agent still proposes no effective change.
 - `backend/tests/test_agents.py`: adds regression tests for unchanged non-empty proposals and no-change outcomes.
 
-During review, newline escapes in the transferred test fixtures were normalized to represent actual source-file newlines. GitHub Actions must pass on this final commit before this is treated as the verified state. The old repository has not been deleted.
+During review, newline escapes in the transferred test fixtures were normalized to represent actual source-file newlines. GitHub Actions run [40527901469](https://github.com/abhinay2504/devagent-ai-verified/actions/runs/40527901469) completed successfully on the final code/report state: backend dependency installation, pytest, Ruff, frontend `npm ci`, and `npm run build` all passed. The old repository's pull request #1 has been closed after the fix was transferred. The old repository itself has not been deleted yet.
