@@ -10,6 +10,36 @@ def test_health(test_environment):
     assert response.json()["status"] == "ok"
 
 
+
+
+def test_cors_allows_vite_fallback_port(test_environment):
+    with TestClient(app) as client:
+        response = client.options(
+            "/api/health",
+            headers={
+                "Origin": "http://127.0.0.1:5174",
+                "Access-Control-Request-Method": "GET",
+                "Access-Control-Request-Headers": "content-type",
+            },
+        )
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://127.0.0.1:5174"
+
+
+def test_cors_allows_localhost_vite_fallback_port(test_environment):
+    with TestClient(app) as client:
+        response = client.options(
+            "/api/health",
+            headers={
+                "Origin": "http://localhost:5174",
+                "Access-Control-Request-Method": "GET",
+                "Access-Control-Request-Headers": "content-type",
+            },
+        )
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5174"
+
+
 def test_create_task_and_reject_invalid_repo(test_environment):
     with TestClient(app) as client:
         good = client.post("/api/tasks", json={"description": "Add a helper function", "repo_path": "demo"})

@@ -26,7 +26,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="DevAgent AI", version="0.1.0", description="Local-first AI software engineering agent", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    # Vite may select another port when its default port is occupied (e.g. 5174).
+    # Keep the development API limited to loopback origins while allowing that fallback.
+    allow_origins=[],
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1):[0-9]+$",
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type"],

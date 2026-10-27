@@ -63,7 +63,7 @@ uvicorn app.main:app --reload
 
 ```powershell
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
@@ -115,7 +115,7 @@ Frontend checks:
 
 ```powershell
 cd frontend
-npm install
+npm ci
 npm run build
 ```
 
