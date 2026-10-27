@@ -88,3 +88,14 @@ This addendum records the results after publishing the prepared source snapshot 
 - The original `abhinay2504/devagent-ai` repository was left unchanged.
 
 **Current status:** the new repository has been populated and its contents checked. The user's local dashboard, Ollama connection, Docker runner, and sample task have worked during the local session; final CI confirmation for the latest commit is still outstanding, so this is not described as a fully end-to-end verified release.
+
+
+## Pull-request fix transferred — 2026-10-27
+
+The unchanged-proposal fix from the former repository's pull request #1 was transferred into this repository's `main` branch. The three files are now updated:
+
+- `backend/app/agents.py`: detects proposals whose file contents are unchanged and retries once with corrective instructions.
+- `backend/app/workflow.py`: reports clear diagnostics when the agent still proposes no effective change.
+- `backend/tests/test_agents.py`: adds regression tests for unchanged non-empty proposals and no-change outcomes.
+
+During review, newline escapes in the transferred test fixtures were normalized to represent actual source-file newlines. GitHub Actions must pass on this final commit before this is treated as the verified state. The old repository has not been deleted.
